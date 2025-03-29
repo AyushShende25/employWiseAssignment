@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router';
 import { AxiosError } from 'axios';
@@ -23,29 +22,24 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { authApi } from '@/api/authApi';
-import { useAuth } from '@/components/AuthContext';
-
-const formSchema = z.object({
-  email: z.string().email('Invalid email'),
-  password: z.string().min(8, {
-    message: 'Password must be at least 8 characters.',
-  }),
-});
+import { LoginUserInput } from '@/types';
+import { loginFormSchema } from '@/schema';
+import useAuth from '@/hooks/useAuth';
 
 function Login() {
   const navigate = useNavigate();
 
   const { setToken } = useAuth();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<LoginUserInput>({
+    resolver: zodResolver(loginFormSchema),
     defaultValues: {
       email: '',
       password: '',
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: LoginUserInput) {
     try {
       const res = await authApi.login(values);
       if (res?.token) {

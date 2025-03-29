@@ -24,7 +24,7 @@ function App() {
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <Toaster />
+          <Toaster richColors />
         </AuthProvider>
       </QueryClientProvider>
     </Router>
