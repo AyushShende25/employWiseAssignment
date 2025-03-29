@@ -1,9 +1,7 @@
 import { api } from '@/api/axiosInstance';
+import { Credentials } from '@/types';
 
-type Credentials = {
-  email: string;
-  password: string;
-};
+
 
 export const authApi = {
   login: async (credentials: Credentials) => {

@@ -2,6 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router';
+import { AxiosError } from 'axios';
 
 import {
   Card,
@@ -21,8 +23,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { authApi } from '@/api/authApi';
-import { useNavigate } from 'react-router';
-import { AxiosError } from 'axios';
 import { useAuth } from '@/components/AuthContext';
 
 const formSchema = z.object({
@@ -34,7 +34,9 @@ const formSchema = z.object({
 
 function Login() {
   const navigate = useNavigate();
+
   const { setToken } = useAuth();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,7 +45,6 @@ function Login() {
     },
   });
 
-  // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const res = await authApi.login(values);
@@ -54,7 +55,6 @@ function Login() {
         navigate('/');
       }
     } catch (error) {
-      console.log(error);
       if (error instanceof AxiosError && error.response?.data.error) {
         form.setError('root.serverError', {
           message: error.response.data.error,
@@ -68,7 +68,7 @@ function Login() {
   }
 
   return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+    <main className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
         <Card>
           <CardHeader>
@@ -126,7 +126,7 @@ function Login() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </main>
   );
 }
 export default Login;
